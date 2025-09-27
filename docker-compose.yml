@@ -1,0 +1,44 @@
+version: "2.2"
+services:
+
+  deps:
+    scale: 0
+    image: faust.cs.fau.de:5000/birthdaygram-deps
+    build:
+      context: ./deps
+      dockerfile: Dockerfile.deps
+
+  webserver:
+    restart: unless-stopped
+    image: faust.cs.fau.de:5000/birthdaygram-webserver
+    init: true
+    build: ./webserver
+    ports:
+      - "3000:3000"
+    depends_on:
+        postgres:
+          condition: service_healthy
+
+  postgres:
+    restart: unless-stopped
+    image: postgres:17-alpine
+    volumes:
+      - ./data/:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: birthdaydb
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d birthdaydb"]
+      interval: 10s
+      timeout: 10s
+      retries: 20
+      start_period: 10s
+
+networks:
+  default:
+    enable_ipv6: true
+    ipam:
+        driver: default
+        config:
+            - subnet: "fd42:d0ce:3334::/64"
