@@ -25,48 +25,48 @@ def generate_comment():
 
 def update_password(self, session, old_password):
   new_password = generate_password()
-  resp = session.post(f"http://[{self.ip}]:3000"+"/updateProfile/password",data={"password": new_password, "old_password": old_password})
+  resp = session.post(f"http://{self.ip}:3000"+"/updateProfile/password",data={"password": new_password, "old_password": old_password})
   if resp.status_code != 200:
     raise ValueError(f"- Status Code: {resp.status_code}\n- Used Password: {old_password}\n- New Password: {new_password}\n- Resp Text: {resp.text}")
   return new_password
 
 def update_username(self, session, old_password):
   new_username = generate_name()
-  resp = session.post(f"http://[{self.ip}]:3000"+"/updateProfile/username",data={"username": new_username, "old_password": old_password})
+  resp = session.post(f"http://{self.ip}:3000"+"/updateProfile/username",data={"username": new_username, "old_password": old_password})
   if resp.status_code != 200:
     raise ValueError(f"- Status Code: {resp.status_code}\n- Used Password: {old_password}\n- New Username: {new_username}\n- Resp Text: {resp.text}")
   return new_username
 
 def update_profilePicture(self, session, image):
-  resp = session.post(f"http://[{self.ip}]:3000"+"/updateProfile/image",files={"image":image})
+  resp = session.post(f"http://{self.ip}:3000"+"/updateProfile/image",files={"image":image})
   if resp.status_code != 200:
     raise ValueError(f"- Status Code: {resp.status_code}\n- Resp Text: {resp.text}")
 
 def upload_public_image(self, session, image):
-  resp = session.post(f"http://[{self.ip}]:3000"+"/upload",data={"public": "public"},files={"image":image})
+  resp = session.post(f"http://{self.ip}:3000"+"/upload",data={"public": "public"},files={"image":image})
   if resp.status_code != 200:
     raise ValueError(f"- Status Code: {resp.status_code}\n- Resp Text: {resp.text}")
 
 def upload_private_image(self, session, image):
-  resp = session.post(f"http://[{self.ip}]:3000"+"/upload",data={"public": "private"},files={"image":image})
+  resp = session.post(f"http://{self.ip}:3000"+"/upload",data={"public": "private"},files={"image":image})
   if resp.status_code != 200:
     raise ValueError(f"- Status Code: {resp.status_code}\n- Resp Text: {resp.text}")
 
 def post_comment(self, session, image_num, comment):
-  resp = session.post(f"http://[{self.ip}]:3000/image/{image_num}", data={"comment": comment})
+  resp = session.post(f"http://{self.ip}:3000/image/{image_num}", data={"comment": comment})
   if resp.status_code != 200:
-    raise ValueError(f"- Status Code: {resp.status_code}\n- Comment: {comment}\n- Image url: http://[{self.ip}]:3000/image/{image_num}\n- Resp Text: {resp.text}")
+    raise ValueError(f"- Status Code: {resp.status_code}\n- Comment: {comment}\n- Image url: http://{self.ip}:3000/image/{image_num}\n- Resp Text: {resp.text}")
   return comment
 
 def check_register(self, session, username, password):
-  resp = session.post(f"http://[{self.ip}]:3000/auth/register", data={"username" : username, "password": password})
+  resp = session.post(f"http://{self.ip}:3000/auth/register", data={"username" : username, "password": password})
   if resp.status_code != 200:
-    raise ValueError(f"- Status Code: {resp.status_code}\n- Username: {username}\n- Password: {password}\n- User Url: http//[{self.ip}]:3000/view/{username}\n- Resp Text: {resp.text}")
+    raise ValueError(f"- Status Code: {resp.status_code}\n- Username: {username}\n- Password: {password}\n- User Url: http//{self.ip}:3000/view/{username}\n- Resp Text: {resp.text}")
 
 def check_login(self, session, username, password):
-  resp = session.post(f"http://[{self.ip}]:3000/auth/login", data={"username" : username, "password": password})
+  resp = session.post(f"http://{self.ip}:3000/auth/login", data={"username" : username, "password": password})
   if resp.status_code != 200:
-    raise ValueError(f"- Status Code: {resp.status_code}\n- Username: {username}\n- Password: {password}\n- User Url: http//[{self.ip}]:3000/view/{username}\n- Resp Text: {resp.text}")
+    raise ValueError(f"- Status Code: {resp.status_code}\n- Username: {username}\n- Password: {password}\n- User Url: http//{self.ip}:3000/view/{username}\n- Resp Text: {resp.text}")
 
 def create_image_with_flag(flag):
   img_path = create_rand_png()
@@ -115,19 +115,19 @@ def create_rand_png_no_save():
   return img
 
 def get_view(self, session, username):
-  resp = session.get(f"http://[{self.ip}]:3000/view/{username}")
+  resp = session.get(f"http://{self.ip}:3000/view/{username}")
   if resp.status_code != 200:
     raise ValueError(f"- Status Code: {resp.status_code}\n- Username: {username}\n- Resp Text: {resp.text}")
   return resp.text
 
 def get_pub_img(self, session, num):
-  resp = session.get(f"http://[{self.ip}]:3000/image/{num}")
+  resp = session.get(f"http://{self.ip}:3000/image/{num}")
   if resp.status_code != 200:
-    raise ValueError(f"- Status Code: {resp.status_code}\n- Image Url: http://[{self.ip}]:3000/image{num}\n- Resp Text: {resp.text}")
+    raise ValueError(f"- Status Code: {resp.status_code}\n- Image Url: http://{self.ip}:3000/image{num}\n- Resp Text: {resp.text}")
   return resp.text
 
 def get_feed_pic_nums(self):
-  resp = requests.get(f"http://[{self.ip}]:3000/feed")
+  resp = requests.get(f"http://{self.ip}:3000/feed")
   if resp.status_code != 200:
     raise ValueError(f"- Status Code: {resp.status_code}\n- Resp Text: {resp.text}")
   reg_text = r'<a href="/image/\d+">'
@@ -138,7 +138,7 @@ def get_feed_pic_nums(self):
 
 
 def logout(self):
-  requests.get(f"http://[{self.ip}]:3000/auth/logout")
+  requests.get(f"http://{self.ip}:3000/auth/logout")
 
 def fromPILImageToBytes(image):
     imageByteArray = io.BytesIO()
